@@ -110,4 +110,22 @@ public class Farbbild extends BufferedImage
             }
         }
     }
+    
+    public void horizontalSpiegeln()
+    {
+        int hoehe = getHeight();
+        int breite = getWidth();
+        Color[][] bild = new Color[breite][hoehe];
+        
+        for(int y = 0; y <  hoehe; y++) {
+            for(int x = 0; x < breite; x++) {
+                bild[x][y] = gibPunktfarbe(x,y);
+            }
+        }
+        for(int y = 0; y <  hoehe; y++) {
+            for(int x = 0; x < breite; x++) {
+                setzePunktfarbe(bild.length-x-1,y, bild[x][y]);
+            }
+        }
+    }
 }

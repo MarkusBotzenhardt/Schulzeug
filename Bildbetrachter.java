@@ -140,6 +140,15 @@ public class Bildbetrachter
             });
         filterMenue.add(schwellwertEintrag);
         
+        JMenuItem horizontalSpiegeln = new JMenuItem("Horizontal Spiegeln");
+        horizontalSpiegeln.addActionListener(new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    horizontalSpiegeln();
+                }
+            });
+        filterMenue.add(horizontalSpiegeln);
+        
         JMenu hilfeMenue = new JMenu("Hilfe");
         menuezeile.add(hilfeMenue);
         JMenuItem infoEintrag = new JMenuItem("Info...");
@@ -178,6 +187,16 @@ public class Bildbetrachter
         {
             statusLabelSetzen("Das Bild wird in Graustufen umgewandelt.");
             aktuellesBild.graustufen();
+            fenster.repaint();
+        }
+    }
+    
+    private void horizontalSpiegeln()
+    {
+        if(pruefeObBildGeladen())
+        {
+            statusLabelSetzen("Das Bild wird horizontal gespiegelt.");
+            aktuellesBild.horizontalSpiegeln();
             fenster.repaint();
         }
     }
