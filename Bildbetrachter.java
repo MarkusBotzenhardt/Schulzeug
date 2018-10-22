@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import javax.swing.*;
+import java.util.ArrayList;
 
 /**
  * Bildbetrachter ist die Hauptklasse der Bildbetrachter-Anwendung. Sie
@@ -20,6 +21,7 @@ public class Bildbetrachter
     private Bildflaeche bildflaeche;
     private Farbbild aktuellesBild;
     private JLabel statusLabel;
+    private ArrayList<Filter> filterListe;
     private final String VERSION = "0.9";
     
     /**
@@ -28,7 +30,17 @@ public class Bildbetrachter
      */
     public Bildbetrachter()
     {
+        filterListeErstellen();
         fensterErzeugen();
+    }
+    
+    private void filterListeErstellen()
+    {
+        filterListe = new ArrayList<>();
+        filterListe.add(new Aufhellen());
+        filterListe.add(new Abdunkeln());
+        filterListe.add(new Graustufen());
+        filterListe.add(new HorizontalSpiegeln());
     }
 
     // ---- Implementierung der Menü-Funktionen ----
@@ -113,41 +125,10 @@ public class Bildbetrachter
         JMenu filterMenue = new JMenu("Filter");
         menuezeile.add(filterMenue);
 
-        JMenuItem dunklerEintrag = new JMenuItem("Dunkler");
-        dunklerEintrag.addActionListener(new ActionListener(){
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    dunkler();
-                }
-            });
-        filterMenue.add(dunklerEintrag);
-
-        JMenuItem hellerEintrag = new JMenuItem("Heller");
-        hellerEintrag.addActionListener(new ActionListener(){
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    heller();
-                }
-            });
-        filterMenue.add(hellerEintrag);
-
-        JMenuItem schwellwertEintrag = new JMenuItem("Schwellwert");
-        schwellwertEintrag.addActionListener(new ActionListener(){
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    schwellwert();
-                }
-            });
-        filterMenue.add(schwellwertEintrag);
-        
-        JMenuItem horizontalSpiegeln = new JMenuItem("Horizontal Spiegeln");
-        horizontalSpiegeln.addActionListener(new ActionListener(){
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    horizontalSpiegeln();
-                }
-            });
-        filterMenue.add(horizontalSpiegeln);
+        for(Filter filter: filterListe)
+        {
+            filterMenue.add(filterEinträgeErzeugen(filter));
+        } 
         
         JMenu hilfeMenue = new JMenu("Hilfe");
         menuezeile.add(hilfeMenue);
@@ -160,46 +141,32 @@ public class Bildbetrachter
             });
         hilfeMenue.add(infoEintrag);
     }
-
-    private void dunkler()
+    
+    private JMenuItem filterEinträgeErzeugen(Filter filter)
     {
-        if(pruefeObBildGeladen())
-        {
-            statusLabelSetzen("Das Bild wird abgedunkelt.");
-            aktuellesBild.abdunkeln();
-            fenster.repaint();
-        }
-    } 
-
-    private void heller()
-    {
-        if(pruefeObBildGeladen())
-        {
-            statusLabelSetzen("Das Bild wird aufgehellt.");
-            aktuellesBild.aufhellen();
-            fenster.repaint();
-        }
-    }
-
-    private void schwellwert()
-    {
-        if(pruefeObBildGeladen())
-        {
-            statusLabelSetzen("Das Bild wird in Graustufen umgewandelt.");
-            aktuellesBild.graustufen();
-            fenster.repaint();
-        }
+        JMenuItem eintrag = new JMenuItem(filter.gibFiltername());
+        eintrag.addActionListener(new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    filterAnwenden(filter);
+                }
+            });
+        return eintrag;
     }
     
-    private void horizontalSpiegeln()
+    private void filterAnwenden(Filter filter)
     {
-        if(pruefeObBildGeladen())
+        if(aktuellesBild != null)
         {
-            statusLabelSetzen("Das Bild wird horizontal gespiegelt.");
-            aktuellesBild.horizontalSpiegeln();
+            filter.anwenden(aktuellesBild);
+            statusLabelSetzen("Aktion ausgeführt: " + filter.gibFiltername());
             fenster.repaint();
         }
-    }
+        else
+        {
+            statusLabelSetzen("Bitte zuerst ein Bild laden!");
+        }
+    }  
     
     public void zeigeInfo()
     {
@@ -214,13 +181,13 @@ public class Bildbetrachter
         statusLabel.setText(neuerText);
     }
     
-    public boolean pruefeObBildGeladen()
-    {
-        if(aktuellesBild == null)
-        {
-            statusLabelSetzen("Bitte zuerst ein Bild laden!");
-            return false;
-        }
-        return true;
-    }
+    // public boolean pruefeObBildGeladen()
+    // {
+        // if(aktuellesBild == null)
+        // {
+            // statusLabelSetzen("Bitte zuerst ein Bild laden!");
+            // return false;
+        // }
+        // return true;
+    // }
 }

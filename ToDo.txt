@@ -1,0 +1,19 @@
+
+1 Refacturing
+Gründe: Code-Duplizierung bei Erzeugung der Menüeinträge und bei den Weiterleitungsmethoden
+
+neue abstrakte Klasse Filter
+	Datenfeld filtername, getter
+	abstrakte Methode anwenden
+	
+
+Subklassen von Filter (überschreiben der Methode anwnden)
+
+
+in Bildbetrachter
+neues Datenfeld filterLister (ArrayList<Filter>)
+Methode filterListeErzeugen (Schleife über ArrayList)
+
+Code zur erzeugung der Menüleiste anpassen
+
+"Weiterleitungsmethoden" durch einzelne Methode filterAnwenden(Filter f) ersetzen
