@@ -127,9 +127,10 @@ public class Bildbetrachter
 
         for(Filter filter: filterListe)
         {
-            filterMenue.add(filterEinträgeErzeugen(filter));
+            filterMenue.add(filterEintragErzeugen(filter));
         } 
         
+        // Hilfe-Menü erzeugen
         JMenu hilfeMenue = new JMenu("Hilfe");
         menuezeile.add(hilfeMenue);
         JMenuItem infoEintrag = new JMenuItem("Info...");
@@ -142,7 +143,7 @@ public class Bildbetrachter
         hilfeMenue.add(infoEintrag);
     }
     
-    private JMenuItem filterEinträgeErzeugen(Filter filter)
+    private JMenuItem filterEintragErzeugen(Filter filter)
     {
         JMenuItem eintrag = new JMenuItem(filter.gibFiltername());
         eintrag.addActionListener(new ActionListener(){
